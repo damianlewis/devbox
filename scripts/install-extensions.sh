@@ -22,5 +22,3 @@ do
         fi
     fi
 done
-
-service php5-fpm restart > /dev/null 2>&1

@@ -9,19 +9,33 @@ aliases = "aliases"
 script_dir = File.expand_path("scripts", File.dirname(__FILE__))
 
 supported_webservers = ["apache", "nginx"]
+supported_php = ["5.5", "5.6", "7.0", "7.1"]
 supported_mysql = ["5.5", "5.6", "5.7"]
 
+default_php = "7.1"
 default_mysql = "5.7"
 
 webserver = settings["webserver"] ||= "nginx"
+php_ver = settings["php-ver"] ||= default_php
 mysql_ver = settings["mysql-ver"] ||= default_mysql
 
 unless supported_webservers.include?(webserver)
     abort("Web server #{webserver} not recognised. Only #{supported_webservers} are supported.")
 end
 
+unless supported_php.include?(php_ver)
+    abort("PHP version #{php_ver} not supported. Only versions #{supported_php} are currently supported.")
+end
+
 unless supported_mysql.include?(mysql_ver)
     abort("MySQL version #{mysql_ver} not supported. Only versions #{supported_mysql} are currently supported.")
+end
+
+# Set which devbox version to use
+if php_ver == "5.5"
+    box_ver = ">= 1.0.0, < 2.0.0"
+else
+    box_ver = ">= 2.0.0, < 3.0.0"
 end
 
 # Synced folder
@@ -59,7 +73,7 @@ Vagrant.configure("2") do |config|
     # Configure the vagrant box
     config.vm.define settings["name"] ||= "devbox"
     config.vm.box = "damianlewis/devbox"
-    config.vm.box_version = ">= 1.0.0, < 2.0.0"
+    config.vm.box_version = box_ver
     config.vm.network "private_network", ip: settings["ip"] ||= "192.168.10.10"
     config.vm.hostname = settings["hostname"] ||= "devbox"
 
@@ -95,6 +109,12 @@ Vagrant.configure("2") do |config|
             s.path = script_dir + "/install-extensions.sh"
             s.args = extensions
         end
+
+        config.vm.provision "shell" do |s|
+            s.name = "Restarting PHP"
+            s.inline = "service php$1-fpm restart > /dev/null 2>&1"
+            s.args = [php_ver == "5.5" ? "5" : php_ver]
+       end
     end
 
     # Install Xdebug
@@ -102,6 +122,7 @@ Vagrant.configure("2") do |config|
         config.vm.provision "shell" do |s|
             s.name = "Installing Xdebug"
             s.path = script_dir + "/install-xdebug.sh"
+            s.args = [php_ver == "5.5" ? "5" : php_ver]
         end
     end
 
@@ -114,12 +135,27 @@ Vagrant.configure("2") do |config|
         end
     end
 
+    # Switch PHP version
+    if php_ver != "5.5"
+        config.vm.provision "shell" do |s|
+            s.name = "Switching PHP FPM to version #{php_ver}"
+            s.path = script_dir + "/stop-php.sh"
+            s.args = supported_php - [php_ver]
+       end
+
+        config.vm.provision "shell" do |s|
+            s.name = "Switching PHP CLI to version #{php_ver}"
+            s.inline = "update-alternatives --set php /usr/bin/php$1 > /dev/null 2>&1"
+            s.args = [php_ver]
+       end
+   end
+
     # Switch MySQL version
     if mysql_ver != default_mysql
         config.vm.provision "shell" do |s|
             s.name = "Switching MySQL to version #{mysql_ver}"
             s.path = script_dir + "/switch-mysql.sh"
-            s.args = [mysql_ver]
+            s.args = [mysql_ver, php_ver == "5.5" ? "5" : php_ver]
         end
     end
 
@@ -128,7 +164,7 @@ Vagrant.configure("2") do |config|
         config.vm.provision "shell" do |s|
             s.name = "Creating Site: " + settings["site"]
             s.path = script_dir + "/serve-#{webserver}.sh"
-            s.args = [settings["site"], settings["root"] ||= folder["to"]]
+            s.args = [settings["site"], settings["root"] ||= folder["to"], php_ver == "5.5" ? "5" : php_ver]
         end
     end
 

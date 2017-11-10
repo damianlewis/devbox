@@ -1,7 +1,7 @@
 # DevBox
 
 ## Description
-Provides a PHP development environment using Vagrant and VirtualBox. The development VM created is built on Ubuntu 14.04 with Apache, Nginx, PHP 5.5 and MySQL. The VM can be configured to use different versions of MySQL. It can also be configured to use either Apache or Nginx.
+Provides a PHP development environment using Vagrant and VirtualBox. The development VM created is built on Ubuntu 14.04 with Apache, Nginx, PHP and MySQL. The VM can be configured to use different versions of PHP and MySQL. It can also be configured to use either Apache or Nginx.
 
 
 ### Configuration
@@ -29,6 +29,12 @@ webserver: apache
 
 
 ##### PHP
+By default the VM uses PHP 7.1. To use a different version, add/update the `php-ver` property. Supported versions are `5.6`, `7.0` and `7.1`.
+```
+php-ver: "7.0"
+```
+Note: PHP version 5.5 is also supported but this version is now EOL.
+
 The VM includes the following PHP extensions/modules:
 - cli
 - curl

@@ -2,6 +2,7 @@
 
 www_host=$1
 www_root=$2
+php_ver=$3
 
 if [[ -f "/etc/apache2/sites-available/$www_host.conf" ]]
 then
@@ -12,6 +13,20 @@ fi
 service nginx stop > /dev/null 2>&1
 
 #mkdir -p /var/log/apache2/$www_host
+
+if [[ $php_ver == "5" || $php_ver == "5.6" || $php_ver == "7.0" ]]
+then
+    php_ext_pattern=".ph(p[3457]?|t|tml)"
+else
+    php_ext_pattern=".ph(ar|p|tml)"
+fi
+
+if [[ $php_ver == "5" ]]
+then
+    php_fpm_path="/run/php5-fpm.sock"
+else
+    php_fpm_path="/run/php/php$php_ver-fpm.sock"
+fi
 
 block="# $www_host configuration
 <VirtualHost *:80>
@@ -25,8 +40,8 @@ block="# $www_host configuration
         Require all granted
     </Directory>
 
-    <FilesMatch \".+\\.ph(p[3457]?|t|tml)$\">
-        SetHandler \"proxy:unix:/run/php5-fpm.sock|fcgi://localhost\"
+    <FilesMatch \".+\\$php_ext_pattern$\">
+        SetHandler \"proxy:unix:$php_fpm_path|fcgi://localhost\"
     </FilesMatch>
 
     # ErrorLog \${APACHE_LOG_DIR}/$www_host/error.log

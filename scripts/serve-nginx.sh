@@ -2,6 +2,7 @@
 
 www_host=$1
 www_root=$2
+php_ver=$3
 
 if [[ -f "/etc/nginx/sites-available/$www_host" ]]
 then
@@ -12,6 +13,13 @@ fi
 service apache2 stop > /dev/null 2>&1
 
 #mkdir -p /var/log/nginx/$www_host
+
+if [[ $php_ver == "5" ]]
+then
+    php_fpm_path="/run/php5-fpm.sock"
+else
+    php_fpm_path="/run/php/php$php_ver-fpm.sock"
+fi
 
 block="# $www_host configuration
 server {
@@ -34,7 +42,7 @@ server {
 
     location ~ \.php$ {
         include snippets/fastcgi-php.conf;
-        fastcgi_pass unix:/run/php5-fpm.sock;
+        fastcgi_pass unix:$php_fpm_path;
     }
 }"
 

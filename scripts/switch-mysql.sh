@@ -1,6 +1,7 @@
 #!/usr/bin/env bash
 
 mysql_ver=$1
+php_ver=$2
 
 export DEBIAN_FRONTEND=noninteractive
 
@@ -33,8 +34,12 @@ else
     debconf-set-selections <<< "mysql-community-server mysql-community-server/re-root-pass password $root_password"
 fi
 
-apt-get -y install mysql-server php5-mysql > /dev/null 2>&1
+apt-get -y install mysql-server > /dev/null 2>&1
 
-service php5-fpm restart > /dev/null 2>&1
+if [[ $php_ver == '5' ]]
+then
+    apt-get -y install php5-mysql > /dev/null 2>&1
+    service php5-fpm restart > /dev/null 2>&1
+fi
 
 rm $dep_package
