@@ -1,0 +1,7 @@
+---
+ip: "192.168.10.10"
+site: site.dev
+root: /vagrant
+
+databases:
+    - dbname
