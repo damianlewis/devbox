@@ -5,7 +5,7 @@ DevBox provides a PHP development environment using Vagrant and VirtualBox. The 
 
 
 ### Configuration
-The VM can be configured using the `devbox.yaml` configuration file.
+DevBox can be configured using the `devbox.yaml` configuration file.
 
 
 #### VM
@@ -22,21 +22,21 @@ nfs: true
 
 
 #### Ubuntu
-By default the VM uses Ubuntu 16.04. To use a different version, add/update the `ubuntu-ver` property. Supported versions are `14.04` and `16.04`. 
+By default DevBox uses Ubuntu 16.04. To use a different version, add/update the `ubuntu-ver` property. Supported versions are `14.04` and `16.04`. 
 ```
 ubuntu-ver: "14.04"
 ```
 
 
 #### Webserver
-By default the VM uses Nginx as the webserver. To use a different webserver, add/update the `webserver` property. The webservers supported are `nginx` and `apache`. 
+By default DevBox uses Nginx as the webserver. To use a different webserver, add/update the `webserver` property. The webservers supported are `nginx` and `apache`. 
 ```
 webserver: apache
 ```
 
 
 #### PHP
-By default the VM uses PHP 7.1. To use a different version, add/update the `php-ver` property. Supported versions are `5.6`, `7.0` and `7.1`.
+By default DevBox uses PHP 7.1. To use a different version, add/update the `php-ver` property. Supported versions are `5.6`, `7.0` and `7.1`.
 ```
 php-ver: "7.0"
 ```
@@ -59,7 +59,7 @@ Note: Extensions are installed via Ubuntu's Advanced Packaging Tool (APT)
 
 
 #### MySQL
-By default the VM uses MySQL 5.7. To use a different version, add/update the `mysql-ver` property. Supported versions are `5.5`, `5.6` and `5.7`.
+By default DevBox uses MySQL 5.7. To use a different version, add/update the `mysql-ver` property. Supported versions are `5.5`, `5.6` and `5.7`.
 ```
 mysql-ver: "5.6"
 ```
