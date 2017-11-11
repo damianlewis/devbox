@@ -8,16 +8,24 @@ post_script = "post.sh"
 aliases = "aliases"
 script_dir = File.expand_path("scripts", File.dirname(__FILE__))
 
+supported_ubuntu = ["14.04", "16.04"]
 supported_webservers = ["apache", "nginx"]
 supported_php = ["5.5", "5.6", "7.0", "7.1"]
 supported_mysql = ["5.5", "5.6", "5.7"]
 
+default_ubuntu = "16.04"
+default_webserver = "nginx"
 default_php = "7.1"
 default_mysql = "5.7"
 
-webserver = settings["webserver"] ||= "nginx"
+ubuntu_ver = settings["ubuntu-ver"] ||= default_ubuntu
+webserver = settings["webserver"] ||= default_webserver
 php_ver = settings["php-ver"] ||= default_php
 mysql_ver = settings["mysql-ver"] ||= default_mysql
+
+unless supported_ubuntu.include?(ubuntu_ver)
+    abort("Ubuntu version #{ubuntu_ver} not supported. Only versions #{supported_ubuntu} are currently supported.")
+end
 
 unless supported_webservers.include?(webserver)
     abort("Web server #{webserver} not recognised. Only #{supported_webservers} are supported.")
@@ -31,11 +39,27 @@ unless supported_mysql.include?(mysql_ver)
     abort("MySQL version #{mysql_ver} not supported. Only versions #{supported_mysql} are currently supported.")
 end
 
+if ubuntu_ver == "16.04" && php_ver == "5.5"
+    abort("PHP 5.5 isn't supported on Ubuntu 16.04.")
+end
+
+if ubuntu_ver == "16.04" && mysql_ver == "5.5"
+    abort("MySQL 5.5 isn't supported on Ubuntu 16.04.")
+end
+
+if ubuntu_ver == "16.04" && mysql_ver == "5.6"
+    abort("MySQL 5.6 isn't supported on Ubuntu 16.04.")
+end
+
 # Set which devbox version to use
-if php_ver == "5.5"
-    box_ver = ">= 1.0.0, < 2.0.0"
+if ubuntu_ver == "14.04"
+    if php_ver == "5.5"
+        box_ver = ">= 1.0.0, < 2.0.0"
+    else
+        box_ver = ">= 2.0.0, < 3.0.0"
+    end
 else
-    box_ver = ">= 2.0.0, < 3.0.0"
+    box_ver = ">= 3.0.0, < 4.0.0"
 end
 
 # Synced folder

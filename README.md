@@ -1,7 +1,7 @@
 # DevBox
 
 ## Description
-Provides a PHP development environment using Vagrant and VirtualBox. The development VM created is built on Ubuntu 14.04 with Apache, Nginx, PHP and MySQL. The VM can be configured to use different versions of PHP and MySQL. It can also be configured to use either Apache or Nginx.
+Provides a PHP development environment using Vagrant and VirtualBox. The development VM created is built on Ubuntu with Apache, Nginx, PHP and MySQL. The VM can be configured to use different versions of Ubuntu, PHP and MySQL. It can also be configured to use either Apache or Nginx.
 
 
 ### Configuration
@@ -18,6 +18,13 @@ hostname: vmhostname
 To use NFS for your synced folder, add the `nfs` property.
 ```
 nfs: true
+```
+
+
+##### Ubuntu
+By default the VM uses Ubuntu 16.04. To use a different version, add/update the `ubuntu-ver` property. Supported versions are `14.04` and `16.04`. 
+```
+ubuntu-ver: "14.04"
 ```
 
 
