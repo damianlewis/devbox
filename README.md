@@ -8,7 +8,7 @@ Provides a PHP development environment using Vagrant and VirtualBox. The develop
 The VM can be configured using the `devbox.yaml` configuration file.
 
 
-##### VM
+#### VM
 The IP address for the VM can be changed by updating the `ip` property. Also the default name for the VM is 'devbox', this can be changed by adding the `name` property. The default hostname for the VM is also 'devbox', this can be changed by adding the `hostname` property.
 ```
 ip: "192.168.22.18"
@@ -21,21 +21,21 @@ nfs: true
 ```
 
 
-##### Ubuntu
+#### Ubuntu
 By default the VM uses Ubuntu 16.04. To use a different version, add/update the `ubuntu-ver` property. Supported versions are `14.04` and `16.04`. 
 ```
 ubuntu-ver: "14.04"
 ```
 
 
-##### Webserver
+#### Webserver
 By default the VM uses Nginx as the webserver. To use a different webserver, add/update the `webserver` property. The webservers supported are `nginx` and `apache`. 
 ```
 webserver: apache
 ```
 
 
-##### PHP
+#### PHP
 By default the VM uses PHP 7.1. To use a different version, add/update the `php-ver` property. Supported versions are `5.6`, `7.0` and `7.1`.
 ```
 php-ver: "7.0"
@@ -58,14 +58,14 @@ extensions:
 Note: Extensions are installed via Ubuntu's Advanced Packaging Tool (APT)
 
 
-##### MySQL
+#### MySQL
 By default the VM uses MySQL 5.7. To use a different version, add/update the `mysql-ver` property. Supported versions are `5.5`, `5.6` and `5.7`.
 ```
 mysql-ver: "5.6"
 ```
 
 
-##### Website
+#### Website
 You can set up a site by mapping a domain name to a root folder on the VM. The domain name is set via the `site` property and the root folder set via the `root` property. By default the root folder will be set to `/vagrant`.
 ```
 site: site.dev
@@ -77,7 +77,7 @@ The domain name must be added to your machines `hosts` file. Example:
 ```
 
 
-##### Databases
+#### Databases
 You can create a MySQL database by adding the name for the database to the `databases` property.
 ```
 databases:
@@ -93,29 +93,29 @@ databases:
 The default user created for the databases is `devbox` with the password `secret`.
 
 
-##### Xdebug
+#### Xdebug
 To install Xdebug add the following `xdebug` property:
 ```
 xdebug: true
 ```
 
 
-##### Laravel Envoy
+#### Laravel Envoy
 To install Laravel Envoy add the following `envoy` property:
 ```
 envoy: true
 ```
 
 
-##### Post provisioning
+### Post provisioning
 Use the `post.sh` file to run any further provisions that you require for your VM.
 
 
-##### Bash aliases
+### Bash aliases
 A number of default bash aliases are created for the VM. These can be found in the `aliases` file. Add any further aliases you require to this file before creating the VM.
 
 
-#### Other software included
+### Other software included
 - Git
 - Composer
 - NVM and Node with the following global packages:
