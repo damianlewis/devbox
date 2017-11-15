@@ -14,14 +14,14 @@ service nginx stop > /dev/null 2>&1
 
 #mkdir -p /var/log/apache2/$www_host
 
-if [[ $php_ver == "5" || $php_ver == "5.6" || $php_ver == "7.0" ]]
+if [[ ${php_ver} == "5" || ${php_ver} == "5.6" || ${php_ver} == "7.0" ]]
 then
     php_ext_pattern=".ph(p[3457]?|t|tml)"
 else
     php_ext_pattern=".ph(ar|p|tml)"
 fi
 
-if [[ $php_ver == "5" ]]
+if [[ ${php_ver} == "5" ]]
 then
     php_fpm_path="/run/php5-fpm.sock"
 else
@@ -54,6 +54,6 @@ block="# $www_host configuration
 
 echo "$block" > "/etc/apache2/sites-available/$www_host.conf"
 
-a2ensite $www_host.conf > /dev/null 2>&1
+a2ensite ${www_host}.conf > /dev/null 2>&1
 a2dissite 000-default > /dev/null 2>&1
 service apache2 restart > /dev/null 2>&1

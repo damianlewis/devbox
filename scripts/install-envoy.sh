@@ -17,10 +17,10 @@ source="\n\n# Prepend the composer bin directory to your PATH\n# This path is sp
 composer global require laravel/envoy > /dev/null 2>&1
 
 # Append composer bin path to ~/.profile
-if ! grep -cqs $export_path $profile_file
+if ! grep -cqs ${export_path} ${profile_file}
 then
     printf "$source" >> "$profile_file"
 fi
 
 # Re-source user profiles
-source $profile_file
+source ${profile_file}

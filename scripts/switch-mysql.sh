@@ -19,11 +19,11 @@ root_password='secret'
 debconf-set-selections <<< "mysql-apt-config mysql-apt-config/select-server select mysql-$mysql_ver"
 debconf-set-selections <<< "mysql-apt-config mysql-apt-config/select-product select Apply"
 
-curl -sSOL https://dev.mysql.com/get/$dep_package
-dpkg -i $dep_package > /dev/null 2>&1
+curl -sSOL https://dev.mysql.com/get/${dep_package}
+dpkg -i ${dep_package} > /dev/null 2>&1
 apt-get update > /dev/null 2>&1
 
-if [[ $mysql_ver == '5.5' ]]
+if [[ ${mysql_ver} == '5.5' ]]
 then
     # Set root password for Mysql 5.5
     debconf-set-selections <<< "mysql-server mysql-server/root_password password $root_password"
@@ -36,10 +36,10 @@ fi
 
 apt-get -y install mysql-server > /dev/null 2>&1
 
-if [[ $php_ver == '5' ]]
+if [[ ${php_ver} == '5' ]]
 then
     apt-get -y install php5-mysql > /dev/null 2>&1
     service php5-fpm restart > /dev/null 2>&1
 fi
 
-rm $dep_package
+rm ${dep_package}

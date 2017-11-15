@@ -14,7 +14,7 @@ service apache2 stop > /dev/null 2>&1
 
 #mkdir -p /var/log/nginx/$www_host
 
-if [[ $php_ver == "5" ]]
+if [[ ${php_ver} == "5" ]]
 then
     php_fpm_path="/run/php5-fpm.sock"
 else

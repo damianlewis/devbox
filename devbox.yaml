@@ -1,7 +1,18 @@
 ---
 ip: "192.168.10.10"
+#ubuntu-ver: "14.04"
+#webserver: apache
+#php-ver: "5.5"
+mysql-ver: "5.7"
 site: site.dev
 root: /vagrant
+xdebug: true
+envoy: true
 
 databases:
     - dbname
+
+#extensions:
+#    - php7.0-gd
+#    - php7.0-json
+#    - php7.0-mcrypt

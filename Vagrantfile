@@ -136,7 +136,7 @@ Vagrant.configure("2") do |config|
 
         config.vm.provision "shell" do |s|
             s.name = "Restarting PHP"
-            s.inline = "service php$1-fpm restart > /dev/null 2>&1"
+            s.inline = "service php${1}-fpm restart > /dev/null 2>&1"
             s.args = [php_ver == "5.5" ? "5" : php_ver]
        end
     end
@@ -169,7 +169,7 @@ Vagrant.configure("2") do |config|
 
         config.vm.provision "shell" do |s|
             s.name = "Switching PHP CLI to version #{php_ver}"
-            s.inline = "update-alternatives --set php /usr/bin/php$1 > /dev/null 2>&1"
+            s.inline = "update-alternatives --set php /usr/bin/php${1} > /dev/null 2>&1"
             s.args = [php_ver]
        end
    end
