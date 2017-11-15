@@ -24,8 +24,12 @@ fi
 block="# $www_host configuration
 server {
     listen 80 default_server;
+    listen 443 ssl default_server;
     server_name $www_host www.$www_host;
     root $www_root;
+
+    ssl_certificate	/etc/ssl/$www_host/$www_host.crt;
+    ssl_certificate_key /etc/ssl/$www_host/$www_host.key;
 
     charset utf-8;
     index index.html index.htm index.php;

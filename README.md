@@ -75,6 +75,10 @@ The domain name must be added to your machines `hosts` file. Example:
 ```
 192.168.22.18   mysite.dev
 ```
+To create a self-signed SSL certificate for the site add the following `ssl` property.
+```
+ssl: true
+```
 
 
 #### Databases

@@ -185,6 +185,15 @@ Vagrant.configure("2") do |config|
 
     # Create site
     if settings.has_key?("site")
+        # Install self signed SSL certificate
+        if settings.has_key?("ssl") && settings["ssl"] == true
+            config.vm.provision "shell" do |s|
+                s.name = "Installing self signed SSL certificate"
+                s.path = script_dir + "/install-ssl.sh"
+                s.args = [settings["site"], settings["country"] ||= 'GB', settings["state"] ||= 'London', settings["location"] ||= 'London', settings["organisation"] ||= 'Damian Lewis', settings["organisation-unit"] ||= 'IT Department']
+            end
+        end
+
         config.vm.provision "shell" do |s|
             s.name = "Creating Site: " + settings["site"]
             s.path = script_dir + "/serve-#{webserver}.sh"
