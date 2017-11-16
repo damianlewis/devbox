@@ -3,6 +3,7 @@
 www_host=$1
 www_root=$2
 php_ver=$3
+enable_ssl=$4
 
 if [[ -f "/etc/apache2/sites-available/$www_host.conf" ]]
 then
@@ -50,7 +51,11 @@ block="# $www_host configuration
     # LogLevel warn
 
     # CustomLog \${APACHE_LOG_DIR}/$www_host/access.log combined
-</VirtualHost>
+</VirtualHost>"
+
+if [[ ${enable_ssl} == 'true' ]]
+then
+    block="$block
 
 <VirtualHost *:443>
     SSLEngine On
@@ -77,10 +82,15 @@ block="# $www_host configuration
 
     # CustomLog \${APACHE_LOG_DIR}/$www_host/access.log combined
 </VirtualHost>"
+fi
 
 echo "$block" > "/etc/apache2/sites-available/$www_host.conf"
 
-a2enmod ssl > /dev/null 2>&1
+if [[ ${enable_ssl} == 'true' ]]
+then
+    a2enmod ssl > /dev/null 2>&1
+fi
+
 a2ensite ${www_host}.conf > /dev/null 2>&1
 a2dissite 000-default > /dev/null 2>&1
 service apache2 restart > /dev/null 2>&1

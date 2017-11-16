@@ -3,6 +3,7 @@
 www_host=$1
 www_root=$2
 php_ver=$3
+enable_ssl=$4
 
 if [[ -f "/etc/nginx/sites-available/$www_host" ]]
 then
@@ -21,7 +22,9 @@ else
     php_fpm_path="/run/php/php$php_ver-fpm.sock"
 fi
 
-block="# $www_host configuration
+if [[ ${enable_ssl} == 'true' ]]
+then
+    block="# $www_host configuration
 server {
     listen 80 default_server;
     listen 443 ssl default_server;
@@ -30,7 +33,17 @@ server {
 
     ssl_certificate	/etc/ssl/$www_host/$www_host.crt;
     ssl_certificate_key /etc/ssl/$www_host/$www_host.key;
+"
+else
+    block="# $www_host configuration
+server {
+    listen 80 default_server;
+    server_name $www_host www.$www_host;
+    root $www_root;
+"
+fi
 
+block="$block
     charset utf-8;
     index index.html index.htm index.php;
 

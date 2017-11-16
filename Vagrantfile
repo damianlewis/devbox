@@ -22,6 +22,7 @@ ubuntu_ver = settings["ubuntu-ver"] ||= default_ubuntu
 webserver = settings["webserver"] ||= default_webserver
 php_ver = settings["php-ver"] ||= default_php
 mysql_ver = settings["mysql-ver"] ||= default_mysql
+enable_ssl = settings["ssl"] ||= false
 
 unless supported_ubuntu.include?(ubuntu_ver)
     abort("Ubuntu version #{ubuntu_ver} not supported. Only versions #{supported_ubuntu} are currently supported.")
@@ -197,7 +198,7 @@ Vagrant.configure("2") do |config|
         config.vm.provision "shell" do |s|
             s.name = "Creating Site: " + settings["site"]
             s.path = script_dir + "/serve-#{webserver}.sh"
-            s.args = [settings["site"], settings["root"] ||= folder["to"], php_ver == "5.5" ? "5" : php_ver]
+            s.args = [settings["site"], settings["root"] ||= folder["to"], php_ver == "5.5" ? "5" : php_ver, enable_ssl ? "true" : "false"]
         end
     end
 
@@ -216,4 +217,6 @@ Vagrant.configure("2") do |config|
     if File.exists? post_script
         config.vm.provision "shell", path: post_script
     end
+
+    config.vm.provision "shell", path: script_dir + "/switch-webserver.sh", args: [webserver], run: "always"
 end
