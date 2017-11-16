@@ -2,11 +2,9 @@
 
 if [[ $1 == 'apache' ]]
 then
-    echo 'Starting Apache'
-    service nginx stop
-    service apache2 start
+    service nginx stop > /dev/null 2>&1
+    service apache2 start > /dev/null 2>&1
 else
-    echo 'Starting Nginx'
-    service apache2 stop
-    service nginx start
+    service apache2 stop > /dev/null 2>&1
+    service nginx start > /dev/null 2>&1
 fi
