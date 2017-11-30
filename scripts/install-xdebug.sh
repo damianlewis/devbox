@@ -42,9 +42,9 @@ else
 
     # Configure xdebug
     block="zend_extension=xdebug.so
-    xdebug.remote_enable=1
-    xdebug.remote_connect_back=1
-    xdebug.remote_port=9000"
+xdebug.remote_enable=1
+xdebug.remote_connect_back=1
+xdebug.remote_port=9000"
 
     echo "$block" > ${xdebug_path}
 
