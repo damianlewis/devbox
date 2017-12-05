@@ -51,9 +51,9 @@ The VM includes the following PHP extensions/modules:
 If you require additional PHP extensions/modules then they can be added to the `extenstion` property as follows:
 ```
 extensions:
-    - php5-gd
-    - php5-json
-    - php5-mcrypt
+    - php7.1-gd
+    - php7.1-json
+    - php7.1-mcrypt
 ```
 Note: Extensions are installed via Ubuntu's Advanced Packaging Tool (APT)
 
