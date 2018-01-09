@@ -12,7 +12,7 @@ else
     mkdir ${ssl_path}
 
     # Create root CA key and certificate
-    openssl genrsa -out ${ssl_path}/rootCA.key 2048
+    openssl genrsa -out ${ssl_path}/rootCA.key 2048 > /dev/null 2>&1
     openssl req -x509 -new -nodes -key ${ssl_path}/rootCA.key -sha256 -days 3650 -out ${ssl_path}/rootCA.pem -config <( cat ${conf_path}/server.csr.cnf ) > /dev/null 2>&1
 
     # Create server key
