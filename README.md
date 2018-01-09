@@ -75,10 +75,25 @@ The domain name must be added to your machines `hosts` file. Example:
 ```
 192.168.22.18   mysite.dev
 ```
+
+
+#### SSL Certificate
 To create a self-signed SSL certificate for the site add the following `ssl` property.
 ```
 ssl: true
 ```
+
+Update the certificate credentials in the `/scripts/ssl-conf/server.csr.cnf` file, paying special attention to the 'Common Name' (CN).
+```
+CN = site.test
+```
+
+Update the subject alternative name in the `/scripts/ssl-conf/v3.ext` file.
+```
+DNS.1 = site.test
+```
+
+The certificate will need to be added to your browsers trusted store.
 
 
 #### Databases
