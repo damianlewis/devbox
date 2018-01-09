@@ -68,12 +68,12 @@ mysql-ver: "5.6"
 #### Website
 You can set up a site by mapping a domain name to a root folder on the VM. The domain name is set via the `site` property and the root folder set via the `root` property. By default the root folder will be set to `/vagrant`.
 ```
-site: site.dev
+site: site.test
 root: /path/to/root/folder/on/vm
 ```
 The domain name must be added to your machines `hosts` file. Example: 
 ```
-192.168.22.18   mysite.dev
+192.168.22.18   mysite.test
 ```
 
 
