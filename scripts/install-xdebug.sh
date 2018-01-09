@@ -29,6 +29,7 @@ else
 
     if [[ ${is_installed} != 0 ]]
     then
+        apt-get update > /dev/null 2>&1
         apt-get -y install php${php_ver}-dev > /dev/null 2>&1
     fi
 

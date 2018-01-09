@@ -1,6 +1,7 @@
 #!/usr/bin/env bash
 
 extensions=$@
+is_updated=0
 
 for extension in ${extensions}
 do
@@ -18,6 +19,13 @@ do
             echo "Unable to locate $extension package"
         else
             echo "Installing $extension"
+
+            if [[ ${is_updated} == 0 ]]
+            then
+                apt-get update > /dev/null 2>&1
+                is_updated=1
+            fi
+
             apt-get -y install ${extension} > /dev/null 2>&1
         fi
     fi
