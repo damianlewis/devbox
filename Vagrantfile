@@ -191,7 +191,7 @@ Vagrant.configure("2") do |config|
             config.vm.provision "shell" do |s|
                 s.name = "Installing self signed SSL certificate"
                 s.path = script_dir + "/install-ssl.sh"
-                s.args = [settings["site"], settings["country"] ||= 'GB', settings["state"] ||= 'London', settings["location"] ||= 'London', settings["organisation"] ||= 'Damian Lewis', settings["organisation-unit"] ||= 'IT Department']
+                s.args = [settings["site"], settings["root"]]
             end
         end
 

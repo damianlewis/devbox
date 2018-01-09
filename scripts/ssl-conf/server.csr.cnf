@@ -1,0 +1,14 @@
+[req]
+default_bits = 2048
+prompt = no
+default_md = sha256
+distinguished_name = dn
+
+[dn]
+C=GB
+ST=State
+L=Locality
+O=Organization Name
+OU=Organizational Unit Name
+emailAddress=administrative-address@your-email.com
+CN = site.test

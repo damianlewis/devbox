@@ -31,8 +31,8 @@ server {
     server_name $www_host www.$www_host;
     root $www_root;
 
-    ssl_certificate	/etc/ssl/$www_host/$www_host.crt;
-    ssl_certificate_key /etc/ssl/$www_host/$www_host.key;
+    ssl_certificate	/etc/ssl/$www_host/server.crt;
+    ssl_certificate_key /etc/ssl/$www_host/server.key;
 "
 else
     block="# $www_host configuration

@@ -1,14 +1,23 @@
 #!/usr/bin/env bash
 
 www_host=$1
-country=$2
-state=$3
-location=$4
-organisation=$5
-organisation_unit=$6
+root_path=$2
 ssl_path="/etc/ssl/$www_host"
-common_name=${www_host}
+conf_path="$root_path/scripts/ssl-conf"
 
-mkdir ${ssl_path}
-openssl req -nodes -newkey rsa:2048 -keyout ${ssl_path}/${www_host}.key -out ${ssl_path}/${www_host}.csr -subj "/C=$country/ST=$state/L=$location/O=$organisation/OU=$organisation_unit/CN=$common_name" > /dev/null 2>&1
-openssl x509 -req -days 365 -in ${ssl_path}/${www_host}.csr -signkey ${ssl_path}/${www_host}.key -out ${ssl_path}/${www_host}.crt > /dev/null 2>&1
+if [[ -d ${ssl_path} ]]
+then
+    echo 'SSL certificate already exists'
+else
+    mkdir ${ssl_path}
+
+    # Create root CA key and certificate
+    openssl genrsa -out ${ssl_path}/rootCA.key 2048
+    openssl req -x509 -new -nodes -key ${ssl_path}/rootCA.key -sha256 -days 3650 -out ${ssl_path}/rootCA.pem -config <( cat ${conf_path}/server.csr.cnf ) > /dev/null 2>&1
+
+    # Create server key
+    openssl req -new -sha256 -nodes -newkey rsa:2048 -keyout ${ssl_path}/server.key -out ${ssl_path}/server.csr -config <( cat ${conf_path}/server.csr.cnf ) > /dev/null 2>&1
+
+    # Create server certificate
+    openssl x509 -req -in ${ssl_path}/server.csr -CA ${ssl_path}/rootCA.pem -CAkey ${ssl_path}/rootCA.key -CAcreateserial -out ${ssl_path}/server.crt -days 3650 -sha256 -extfile ${conf_path}/v3.ext > /dev/null 2>&1
+fi

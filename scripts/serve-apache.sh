@@ -59,8 +59,8 @@ then
 
 <VirtualHost *:443>
     SSLEngine On
-    SSLCertificateFile /etc/ssl/$www_host/$www_host.crt
-    SSLCertificateKeyFile /etc/ssl/$www_host/$www_host.key
+    SSLCertificateFile /etc/ssl/$www_host/server.crt
+    SSLCertificateKeyFile /etc/ssl/$www_host/server.key
     ServerName $www_host
     ServerAlias www.$www_host
     DocumentRoot $www_root
