@@ -3,7 +3,7 @@
 composer_bin_path='/home/vagrant/.config/composer/vendor/bin'
 
 # Check if Envoy has been installed
-if [ -h "$composer_bin_path/envoy" ]
+if [[ -h "$composer_bin_path/envoy" ]]
 then
     echo 'Laravel Envoy already installed'
     exit 0

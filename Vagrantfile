@@ -12,16 +12,23 @@ supported_ubuntu = ["14.04", "16.04"]
 supported_webservers = ["apache", "nginx"]
 supported_php = ["5.5", "5.6", "7.0", "7.1"]
 supported_mysql = ["5.5", "5.6", "5.7"]
+supported_java = ["8", "9"]
 
 default_ubuntu = "16.04"
 default_webserver = "nginx"
 default_php = "7.1"
 default_mysql = "5.7"
+default_java = "8"
+default_selenium = "3.8.1"
+default_chromedriver = "latest"
 
 ubuntu_ver = settings["ubuntu-ver"] ||= default_ubuntu
 webserver = settings["webserver"] ||= default_webserver
 php_ver = settings["php-ver"] ||= default_php
 mysql_ver = settings["mysql-ver"] ||= default_mysql
+java_ver = settings["java-ver"] ||= default_java
+selenium_ver = settings["selenium-ver"] ||= default_selenium
+chromedriver_ver = settings["chromedriver-ver"] ||= default_chromedriver
 enable_ssl = settings["ssl"] ||= false
 
 unless supported_ubuntu.include?(ubuntu_ver)
@@ -50,6 +57,10 @@ end
 
 if ubuntu_ver == "16.04" && mysql_ver == "5.6"
     abort("MySQL 5.6 isn't supported on Ubuntu 16.04.")
+end
+
+unless supported_java.include?(java_ver)
+    abort("Java version #{java_ver} not supported. Only versions #{supported_java} are currently supported.")
 end
 
 # Set which devbox version to use
@@ -148,6 +159,26 @@ Vagrant.configure("2") do |config|
             s.name = "Installing Xdebug"
             s.path = script_dir + "/install-xdebug.sh"
             s.args = [php_ver == "5.5" ? "5" : php_ver]
+        end
+    end
+
+    # Install Google Chrome, ChromeDriver and Selenium Server
+    if settings.has_key?("selenium") && settings["selenium"] == true
+        config.vm.provision "shell" do |s|
+            s.name = "Installing Selenium Server"
+            s.path = script_dir + "/install-selenium.sh"
+            s.args = [java_ver, selenium_ver]
+        end
+
+        config.vm.provision "shell" do |s|
+            s.name = "Installing Google Chrome and ChromeDriver"
+            s.path = script_dir + "/install-chrome+chromedriver.sh"
+            s.args = [chromedriver_ver != "latest" ? chromedriver_ver : ""]
+        end
+
+        config.vm.provision "shell" do |s|
+            s.name = "Adding Selenium Server bash commands"
+            s.path = script_dir + "/add-selenium-commands.sh"
         end
     end
 

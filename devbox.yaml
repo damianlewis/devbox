@@ -3,5 +3,7 @@ ip: "192.168.10.10"
 site: site.test
 root: /vagrant
 
-databases:
-    - dbname
+#selenium: true
+
+#databases:
+#    - dbname
