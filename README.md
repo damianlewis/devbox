@@ -115,6 +115,14 @@ databases:
 ```
 
 
+#### Composer
+Composer is included with DevBox. When configuring the VM you can include Composer packages to install globally.
+```yaml
+composer-packages:
+    - laravel/envoy
+```
+
+
 ### Post provisioning
 Use the `post` file to run any further provisions that you require for your VM.
 
@@ -125,7 +133,6 @@ A number of default bash aliases are created for the VM. These can be found in t
 
 ### Other software included
 - Git
-- Composer
 - NVM and Node with the following global packages:
     - Bower
     - Grunt
