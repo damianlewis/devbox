@@ -1,0 +1,12 @@
+#!/usr/bin/env bash
+
+# Install stable version of Google Chrome
+if type google-chrome-stable > /dev/null 2>&1
+then
+    echo 'Google Chrome already installed'
+else
+    curl -sS https://dl-ssl.google.com/linux/linux_signing_key.pub | apt-key add - > /dev/null 2>&1
+    echo 'deb http://dl.google.com/linux/chrome/deb/ stable main' >> /etc/apt/sources.list.d/google-chrome.list
+    apt-get update > /dev/null 2>&1
+    apt-get -y install google-chrome-stable > /dev/null 2>&1
+fi

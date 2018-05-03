@@ -1,0 +1,19 @@
+#!/usr/bin/env bash
+
+# Check if package has been installed
+if composer global show 2> /dev/null | awk '{print $1}' | grep -Fcq "$1"
+then
+    echo "$1 already installed"
+    exit 0
+fi
+
+# Check if package exists
+composer search "$1" > /dev/null 2>&1
+
+if [[ $? != 0 ]]
+then
+    echo "Unable to locate $1 package"
+else
+    # Install package globally
+    composer global require "$1" > /dev/null 2>&1
+fi

@@ -1,0 +1,63 @@
+#!/usr/bin/env bash
+
+hostname=$1
+ssl_path="/etc/ssl"
+
+root_cnf_path="$ssl_path/root.$(hostname).cnf"
+root_key_path="$ssl_path/root.$(hostname).key"
+root_pem_path="$ssl_path/root.$(hostname).pem"
+ext_path="$ssl_path/$hostname.ext"
+key_path="$ssl_path/$hostname.key"
+csr_path="$ssl_path/$hostname.csr"
+crt_path="$ssl_path/$hostname.crt"
+
+cnf="
+[req]
+default_bits = 2048
+prompt = no
+default_md = sha256
+distinguished_name = dn
+
+[dn]
+CN = $(hostname) Root CA"
+
+v3="
+authorityKeyIdentifier = keyid, issuer
+basicConstraints = CA:FALSE
+keyUsage = digitalSignature, nonRepudiation, keyEncipherment, dataEncipherment
+subjectAltName = @alt_names
+
+[alt_names]
+DNS.1 = $hostname"
+
+if [[ ! -f "$root_key_path" && ! -f "$root_pem_path" ]]
+then
+    echo "$cnf" > "$root_cnf_path"
+
+    # Create root CA key
+    openssl genrsa -out "$root_key_path" 2048 > /dev/null 2>&1
+
+    # Create root CA certificate
+    openssl req -config "$root_cnf_path" \
+        -key "$root_key_path" \
+        -x509 -new -nodes -sha256 -days 3650 \
+        -out "$root_pem_path" > /dev/null 2>&1
+fi
+
+if [[ ! -f "$key_path" && ! -f "$crt_path" ]]
+then
+    echo "$v3" > "$ext_path"
+
+    # Create server key
+    openssl req -config "$root_cnf_path" \
+        -new -sha256 -nodes -newkey rsa:2048 \
+        -keyout "$key_path" \
+        -out "$csr_path" > /dev/null 2>&1
+
+    # Create server certificate
+    openssl x509 -req -extfile "$ext_path" \
+        -in "$csr_path" \
+        -sha256 -days 3650 \
+        -CA "$root_pem_path" -CAkey "$root_key_path" -CAcreateserial \
+        -out "$crt_path" > /dev/null 2>&1
+fi

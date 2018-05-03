@@ -1,0 +1,14 @@
+#!/usr/bin/env bash
+
+# Get latest version for Chromedriver
+[[ -n "$1" ]] && version=$1 || version=$(curl -sS chromedriver.storage.googleapis.com/LATEST_RELEASE)
+
+# Install Chromedriver
+if type chromedriver > /dev/null 2>&1
+then
+    echo 'ChromeDriver already installed'
+else
+    wget -N "http://chromedriver.storage.googleapis.com/$version/chromedriver_linux64.zip" > /dev/null 2>&1
+    unzip chromedriver_linux64.zip > /dev/null 2>&1
+    mv chromedriver /usr/local/bin && rm chromedriver_linux64.zip
+fi

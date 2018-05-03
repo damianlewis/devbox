@@ -1,0 +1,54 @@
+---
+# VM configurations
+ip: "192.168.10.10"
+name: devbox
+hostname: devbox
+#ubuntu: "14.04"
+#java: "9"
+selenium: "3.8.1"
+
+# Shared folders to configure
+folders:
+    - map: ~/code/packages/devbox
+      to: /vagrant
+
+# Web server to run
+#webserver: apache
+
+# Additional PHP packages to install
+php-packages:
+    - php7.0-gd
+    - php7.1-mbstring
+    - php7.2-xml
+    - php5.6-gd
+
+# Websites to create
+sites:
+    - url: site71.test
+      root: /vagrant
+      php: "7.1"
+#    - url: site70.test
+#      root: /vagrant
+#      php: "7.0"
+#    - url: site72.test
+#      root: /vagrant
+#      php: "7.2"
+#    - url: site56.test
+#      root: /vagrant
+#      php: "5.6"
+
+# Databases to create
+databases:
+    - name: devbox
+      user: devbox
+      password: secret
+    - name: devbox_testing
+      user: tester
+      password: secret
+
+# Global Composer packages to install
+composer-packages:
+    - laravel/envoy
+
+# Allow browser testing
+browser-testing: true

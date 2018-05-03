@@ -1,0 +1,9 @@
+#!/usr/bin/env bash
+
+# Install Xvfb
+if type Xvfb > /dev/null 2>&1
+then
+    echo "Xvfb already installed"
+else
+    apt-get -y install xvfb > /dev/null 2>&1
+fi

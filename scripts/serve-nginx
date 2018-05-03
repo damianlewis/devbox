@@ -1,0 +1,47 @@
+#!/usr/bin/env bash
+
+hostname=$1
+root=$2
+php=$3
+
+if [[ -f "/etc/nginx/sites-enabled/$hostname" ]]
+then
+    echo "$hostname site already created"
+    exit 0
+fi
+
+block="server {
+    listen 80;
+    listen 443 ssl;
+    server_name $hostname;
+    root $root;
+
+    ssl_certificate /etc/ssl/$hostname.crt;
+    ssl_certificate_key /etc/ssl/$hostname.key;
+
+    charset utf-8;
+    index index.html index.htm index.php;
+
+    access_log off;
+    error_log  /var/log/nginx/$hostname-error.log error;
+
+    location = /favicon.ico { access_log off; log_not_found off; }
+    location = /robots.txt  { access_log off; log_not_found off; }
+
+    location / {
+        try_files \$uri \$uri/ /index.php\$is_args\$args;
+    }
+
+    location ~ \.php$ {
+        include snippets/fastcgi-php.conf;
+        fastcgi_pass unix:/run/php/php$php-fpm.sock;
+    }
+
+    location ~ /\.ht {
+        deny all;
+    }
+}"
+
+echo "$block" > "/etc/nginx/sites-available/$hostname"
+
+ln -fs "/etc/nginx/sites-available/$hostname" "/etc/nginx/sites-enabled/$hostname"

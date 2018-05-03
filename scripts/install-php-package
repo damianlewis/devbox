@@ -1,0 +1,18 @@
+#!/usr/bin/env bash
+
+# Check if package is already installed
+if dpkg --get-selections | awk '{print $1}' | grep -Fcq "$1"
+then
+    echo "$1 already installed"
+    exit 0
+fi
+
+# Check if APT package exists
+apt-cache show "$1" > /dev/null 2>&1
+
+if [[ $? != 0 ]]
+then
+    echo "Unable to locate $1 package"
+else
+    apt-get -y install "$1" > /dev/null 2>&1
+fi

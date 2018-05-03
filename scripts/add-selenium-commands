@@ -1,0 +1,31 @@
+#!/usr/bin/env bash
+
+profile='/home/vagrant/.profile'
+bin_path='/usr/local/bin'
+start_chrome_command="xvfb-run java -Dwebdriver.chrome.driver=$bin_path/chromedriver -jar $bin_path/selenium-server-standalone.jar"
+
+start_chrome="
+# Run Chrome via Selenium Server
+start-chrome() {
+    $start_chrome_command
+}"
+
+start_chrome_debug="
+# Run Chrome in debug mode via Selenium Server
+start-chrome-debug() {
+    $start_chrome_command -debug
+}"
+
+start_chrome_headless="
+# Run Chrome Headless
+start-chrome-headless() {
+    chromedriver --url-base=/wd/hub
+}"
+
+# Make Selenium Server commands global
+grep -Fcqs "start-chrome()" "$profile" || echo "$start_chrome" >> "$profile"
+grep -Fcqs "start-chrome-debug()" "$profile" || echo "$start_chrome_debug" >> "$profile"
+grep -Fcqs "start-chrome-headless()" "$profile" || echo "$start_chrome_headless" >> "$profile"
+
+# Re-source user profiles
+source "$profile"

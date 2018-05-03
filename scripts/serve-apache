@@ -1,0 +1,63 @@
+#!/usr/bin/env bash
+
+hostname=$1
+root=$2
+php=$3
+
+if [[ -f "/etc/apache2/sites-available/$hostname.conf" ]]
+then
+    echo "$hostname site already available"
+    exit 0
+fi
+
+if [[ "$php" < "7.1" ]]
+then
+    php_ext='.ph(p[3457]?|t|tml)'
+else
+    php_ext='.ph(ar|p|tml)'
+fi
+
+block="<VirtualHost *:80>
+    ServerName $hostname
+    DocumentRoot $root
+
+    <Directory $root>
+        Options -Indexes +FollowSymLinks +MultiViews
+        AllowOverride All
+        Require all granted
+    </Directory>
+
+    <FilesMatch \".+\\$php_ext$\">
+        SetHandler \"proxy:unix:/run/php/php$php-fpm.sock|fcgi://localhost\"
+    </FilesMatch>
+
+    ErrorLog \${APACHE_LOG_DIR}/$hostname-error.log
+    LogLevel error
+    # CustomLog \${APACHE_LOG_DIR}/$hostname-access.log combined
+</VirtualHost>
+
+<VirtualHost *:443>
+    SSLEngine On
+    SSLCertificateFile /etc/ssl/$hostname.crt
+    SSLCertificateKeyFile /etc/ssl/$hostname.key
+    ServerName $hostname
+    DocumentRoot $root
+
+    <Directory $root>
+        Options -Indexes +FollowSymLinks +MultiViews
+        AllowOverride All
+        Require all granted
+    </Directory>
+
+    <FilesMatch \".+\\$php_ext$\">
+        SetHandler \"proxy:unix:/run/php/php$php-fpm.sock|fcgi://localhost\"
+    </FilesMatch>
+
+    ErrorLog \${APACHE_LOG_DIR}/$hostname-error.log
+    LogLevel error
+    # CustomLog \${APACHE_LOG_DIR}/$hostname-access.log combined
+</VirtualHost>"
+
+echo "$block" > "/etc/apache2/sites-available/$hostname.conf"
+
+a2ensite "$hostname.conf" > /dev/null 2>&1
