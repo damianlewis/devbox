@@ -10,6 +10,8 @@ then
     exit 0
 fi
 
+[[ "$php" = '5' ]] && fpm_path='/run' || fpm_path='/run/php'
+
 block="server {
     listen 80;
     listen 443 ssl;
@@ -34,7 +36,7 @@ block="server {
 
     location ~ \.php$ {
         include snippets/fastcgi-php.conf;
-        fastcgi_pass unix:/run/php/php$php-fpm.sock;
+        fastcgi_pass unix:$fpm_path/php$php-fpm.sock;
     }
 
     location ~ /\.ht {

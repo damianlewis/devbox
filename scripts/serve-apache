@@ -10,12 +10,8 @@ then
     exit 0
 fi
 
-if [[ "$php" < "7.1" ]]
-then
-    php_ext='.ph(p[3457]?|t|tml)'
-else
-    php_ext='.ph(ar|p|tml)'
-fi
+[[ "$php" < '7.1' ]] && php_ext='.ph(p[3457]?|t|tml)' || php_ext='.ph(ar|p|tml)'
+[[ "$php" = '5' ]] && fpm_path='/run' || fpm_path='/run/php'
 
 block="<VirtualHost *:80>
     ServerName $hostname
@@ -28,7 +24,7 @@ block="<VirtualHost *:80>
     </Directory>
 
     <FilesMatch \".+\\$php_ext$\">
-        SetHandler \"proxy:unix:/run/php/php$php-fpm.sock|fcgi://localhost\"
+        SetHandler \"proxy:unix:$fpm_path/php$php-fpm.sock|fcgi://localhost\"
     </FilesMatch>
 
     ErrorLog \${APACHE_LOG_DIR}/$hostname-error.log
@@ -50,7 +46,7 @@ block="<VirtualHost *:80>
     </Directory>
 
     <FilesMatch \".+\\$php_ext$\">
-        SetHandler \"proxy:unix:/run/php/php$php-fpm.sock|fcgi://localhost\"
+        SetHandler \"proxy:unix:$fpm_path/php$php-fpm.sock|fcgi://localhost\"
     </FilesMatch>
 
     ErrorLog \${APACHE_LOG_DIR}/$hostname-error.log
