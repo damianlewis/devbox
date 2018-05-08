@@ -49,21 +49,21 @@ webserver: apache
 
 
 #### PHP
-The VM includes the following PHP extensions/modules:
+The VM includes the following PHP modules:
 - cli
 - curl
 - fpm
 - mysql
 - xdebug
 
-If you require additional PHP extensions/modules then they can be added to the `php-packages` array as follows:
+If you require additional PHP modules then they can be added to the `php-modules` array as follows:
 ```yaml
-php-packages:
+php-modules:
     - php7.0-gd
     - php7.1-mbstring
     - php7.2-xml
 ```
-Note: Extensions are installed via Ubuntu's Advanced Packaging Tool (APT)
+**Note**: Modules are installed via Ubuntu's Advanced Packaging Tool (APT)
 
 
 #### Website
@@ -87,6 +87,8 @@ sites:
       php: "7.1"
 ```
 
+**Note**: PHP version 5.5, is also supported for legacy systems. Add `5` to the `php` sites property.
+
 The url must be added to your machines `hosts` file. Example: 
 ```
 192.168.22.18   site1.test
@@ -94,6 +96,15 @@ The url must be added to your machines `hosts` file. Example:
 ```
 
 A self-signed SSL certificate is created for each site, so sites can be accessed via HTTP and HTTPS. 
+
+
+#### MySQL
+By default, DevBox uses MySQL 5.7. To install an alternative version, add the `mysql` property. Supported versions are `5.5`, `5.6` and `5.7`. 
+```yaml
+mysql: "5.5"
+```
+
+**Note**: These alternative versions are only supported with Ubuntu 14.04.
 
 #### Databases
 You can create multiple MySQL database by adding the `name` for the database to the `databases` array.

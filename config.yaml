@@ -11,8 +11,11 @@ ip: "192.168.10.10"
 # Web server to run
 #webserver: apache
 
-# Additional PHP packages to install
-#php-packages:
+# MySQL version to use
+#mysql: "5.5"
+
+# Additional PHP modules to install
+#php-modules:
 #    - php7.0-gd
 #    - php7.1-mbstring
 #    - php7.2-xml

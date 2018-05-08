@@ -1,0 +1,67 @@
+#!/usr/bin/env bash
+
+export DEBIAN_FRONTEND=noninteractive
+
+version=$1
+current_version=$(dpkg --list | grep 'mysql-server' | awk '{print $3}' | grep -Eo '^[0-9]\.[0-9]' | uniq)
+ubuntu=$(lsb_release -r | awk '{print $2}')
+ubuntu_major=$(echo "$ubuntu" | awk -F. '{print $1}')
+php_versions=$(dpkg --list | grep 'php[0-9]\.*[0-9]*' | awk '{print $2}' | grep -Eo '[0-9]\.*[0-9]*' | uniq)
+
+if [[ "$version" = "$current_version" ]]
+then
+    echo "MySQL $version already installed"
+    exit 0
+fi
+
+if [[ "$ubuntu_major" > '14' && "$version" < '5.7' ]]
+then
+    echo "MySQL $version not supported on $ubuntu"
+    exit 1
+fi
+
+# Remove current version of MySQL
+apt-get remove -y --purge mysql-server mysql-client mysql-common > /dev/null 2>&1
+apt-get autoremove -y > /dev/null 2>&1
+apt-get autoclean > /dev/null 2>&1
+
+rm -rf /var/lib/mysql
+rm -rf /var/log/mysql
+rm -rf /etc/mysql
+rm /etc/apt/sources.list.d/mysql.list
+
+# MySQL root user password
+root_user='root'
+root_password='secret'
+
+if [[ "$version" > '5.5' ]]
+then
+    # Add MySQL APT repository
+    apt-key adv --keyserver ha.pool.sks-keyservers.net --recv-keys 5072E1F5 > /dev/null 2>&1
+    echo "deb http://repo.mysql.com/apt/ubuntu/ $(lsb_release -c | awk '{print $2}') mysql-$version" >> /etc/apt/sources.list.d/mysql.list
+    apt-get update > /dev/null 2>&1
+fi
+
+# Install MySQL
+debconf-set-selections <<< "mysql-server mysql-server/root_password password $root_password"
+debconf-set-selections <<< "mysql-server mysql-server/root_password_again password $root_password"
+debconf-set-selections <<< "mysql-community-server mysql-community-server/root-pass password $root_password"
+debconf-set-selections <<< "mysql-community-server mysql-community-server/re-root-pass password $root_password"
+apt-get -y install mysql-server > /dev/null 2>&1
+
+# PHP MySQL module may have been removed. Reinstall it if it's not present
+for php in $php_versions
+do
+    if ! (dpkg --list | grep -Fcq "php$php-mysql")
+    then
+        apt-get -y install "php$php-mysql" > /dev/null 2>&1
+        service "php$php-fpm" restart > /dev/null 2>&1
+    fi
+done
+
+# Configure MySQL for remote access
+sed -i '/^bind-address/s/bind-address.*=.*/bind-address = 0.0.0.0/' /etc/mysql/my.cnf
+mysql --user="$root_user" --password="$root_password" --database='mysql' -e "UPDATE user SET plugin='mysql_native_password' WHERE User='$root_user';" 2> /dev/null
+mysql --user="$root_user" --password="$root_password" -e "GRANT ALL ON *.* TO root@'0.0.0.0' IDENTIFIED BY '$root_password' WITH GRANT OPTION;" 2> /dev/null
+mysql --user="$root_user" --password="$root_password" -e 'FLUSH PRIVILEGES;' 2> /dev/null
+service mysql restart > /dev/null 2>&1

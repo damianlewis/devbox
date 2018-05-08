@@ -8,9 +8,10 @@ post_script = "post"
 aliases = "aliases"
 script_dir = File.expand_path("scripts", File.dirname(__FILE__))
 
-supported_php = ["5.6", "7.0", "7.1", "7.2"]
+supported_php = ["5", "5.6", "7.0", "7.1", "7.2"]
 supported_ubuntu = ["14.04", "16.04"]
 supported_webservers = ["apache", "nginx"]
+supported_mysql = ["5.5", "5.6", "5.7"]
 
 default_chromedriver = "latest"
 default_php = "7.2"
@@ -20,13 +21,13 @@ default_webserver = "nginx"
 
 if settings.has_key?("ubuntu")
     unless supported_ubuntu.include?(settings["ubuntu"])
-        abort("Web server #{settings["webserver"]} not recognised. Only #{supported_webservers} are supported.")
+        abort("Web server #{settings["webserver"]} not recognised. Only #{supported_webservers} are currenly supported with DevBox.")
     end
 end
 
 if settings.has_key?("webserver")
     unless supported_webservers.include?(settings["webserver"])
-        abort("Web server #{settings["webserver"]} not recognised. Only #{supported_webservers} are supported.")
+        abort("Web server #{settings["webserver"]} not recognised. Only #{supported_webservers} are currenly supported with DevBox.")
     end
 
     webserver = settings["webserver"]
@@ -124,13 +125,13 @@ Vagrant.configure("2") do |config|
 #         s.inline = "apt-get update > /dev/null 2>&1"
 #     end
 
-    # Install additional PHP packages
-    if settings.has_key?("php-packages")
-        settings["php-packages"].each do |package|
+    # Install additional PHP module
+    if settings.has_key?("php-modules")
+        settings["php-modules"].each do |mod|
             config.vm.provision "shell" do |s|
-                s.name = "Installing PHP package: " + package
-                s.path = script_dir + "/install-php-package"
-                s.args = package
+                s.name = "Installing PHP module: " + mod
+                s.path = script_dir + "/install-php-module"
+                s.args = mod
             end
         end
 
@@ -200,7 +201,7 @@ Vagrant.configure("2") do |config|
 
             if site.has_key?("php")
                 unless supported_php.include?(site["php"])
-                    abort("PHP version #{site["php"]} not recognised. Only versions #{supported_php} are supported.")
+                    abort("PHP version #{site["php"]} not recognised. Only versions #{supported_php} are currenly supported with DevBox.")
                 end
             end
 
@@ -215,6 +216,19 @@ Vagrant.configure("2") do |config|
             s.name = "Restarting #{webserver.capitalize}"
             s.inline = "service ${1} restart > /dev/null 2>&1"
             s.args = [webserver == "apache" ? "apache2" : "nginx"]
+        end
+    end
+
+    # Install alternatative version of MySQL
+    if settings.has_key?("mysql")
+        unless supported_mysql.include?(settings["mysql"])
+            abort("MySQL version #{settings["mysql"]} not recognised. Only versions #{supported_mysql} are currenly supported with DevBox.")
+        end
+
+        config.vm.provision "shell" do |s|
+            s.name = "Installing MySQL #{settings["mysql"]}"
+            s.path = script_dir + "/install-mysql"
+            s.args = settings["mysql"]
         end
     end
 
