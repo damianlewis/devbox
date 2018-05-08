@@ -1,5 +1,7 @@
 #!/usr/bin/env bash
 
+export DEBIAN_FRONTEND=noninteractive
+
 # Install Java JRE
 if type java > /dev/null 2>&1
 then

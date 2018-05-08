@@ -1,5 +1,7 @@
 #!/usr/bin/env bash
 
+export DEBIAN_FRONTEND=noninteractive
+
 # Get latest version for Chromedriver
 [[ -n "$1" ]] && version=$1 || version=$(curl -sS chromedriver.storage.googleapis.com/LATEST_RELEASE)
 

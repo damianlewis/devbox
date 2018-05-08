@@ -1,5 +1,7 @@
 #!/usr/bin/env bash
 
+export DEBIAN_FRONTEND=noninteractive
+
 # Install stable version of Google Chrome
 if type google-chrome-stable > /dev/null 2>&1
 then

@@ -1,5 +1,7 @@
 #!/usr/bin/env bash
 
+export DEBIAN_FRONTEND=noninteractive
+
 version="${1:-3.9.1}"
 download_file="selenium-server-standalone-$version.jar"
 bin_path='/usr/local/bin'

@@ -1,5 +1,7 @@
 #!/usr/bin/env bash
 
+export DEBIAN_FRONTEND=noninteractive
+
 # Install Xvfb
 if type Xvfb > /dev/null 2>&1
 then
