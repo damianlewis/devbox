@@ -87,7 +87,7 @@ sites:
       php: "7.1"
 ```
 
-**Note**: PHP version 5.5, is also supported for legacy systems. Add `5` to the `php` sites property.
+**Note**: PHP version 5.5 is also supported for legacy systems. Add `5` to the `php` sites property.
 
 The url must be added to your machines `hosts` file. Example: 
 ```
