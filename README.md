@@ -1,7 +1,7 @@
 # DevBox
 
 ### Introduction
-DevBox provides a PHP development environment using Vagrant and VirtualBox. The development VM created is built on Ubuntu with Apache, Nginx, PHP and MySQL. The VM can be configured to use different versions of Ubuntu and PHP. It can also be configured to use either Apache or Nginx.
+DevBox provides a PHP development environment using Vagrant and VirtualBox. The development VM created is built on Ubuntu with Apache, Nginx, PHP and MySQL. The VM can be configured to use different versions of Ubuntu, PHP and MySQL. It can also be configured to use either Apache or Nginx.
 
 
 ### Configuration
@@ -111,7 +111,7 @@ mysql: "5.5"
 **Note**: These alternative versions are only supported with Ubuntu 14.04.
 
 #### Databases
-You can create multiple MySQL database by adding the `name` for the database to the `databases` array.
+You can create multiple MySQL databases by adding the `name` for the database to the `databases` array.
 ```yaml
 databases:
     - name: dbname1
