@@ -3,11 +3,19 @@
 hostname=$1
 root=$2
 php=$3
+ubuntu=$(lsb_release -r | awk '{print $2}')
+ubuntu_major=$(echo "$ubuntu" | awk -F. '{print $1}')
 
 if [[ -f "/etc/nginx/sites-enabled/$hostname" ]]
 then
-    echo "$hostname site already created"
+    echo "[$hostname] already created"
     exit 0
+fi
+
+if [[ "$ubuntu_major" > '14' && "$php" < '5.6' ]]
+then
+    echo "PHP $php not supported on $ubuntu"
+    exit 1
 fi
 
 [[ "$php" = '5' ]] && fpm_path='/run' || fpm_path='/run/php'

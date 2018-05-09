@@ -3,11 +3,19 @@
 hostname=$1
 root=$2
 php=$3
+ubuntu=$(lsb_release -r | awk '{print $2}')
+ubuntu_major=$(echo "$ubuntu" | awk -F. '{print $1}')
 
-if [[ -f "/etc/apache2/sites-available/$hostname.conf" ]]
+if [[ -f "/etc/apache2/sites-enabled/$hostname.conf" ]]
 then
-    echo "$hostname site already available"
+    echo "[$hostname] already created"
     exit 0
+fi
+
+if [[ "$ubuntu_major" > '14' && "$php" < '5.6' ]]
+then
+    echo "PHP $php not supported on $ubuntu"
+    exit 1
 fi
 
 [[ "$php" < '7.1' ]] && php_ext='.ph(p[3457]?|t|tml)' || php_ext='.ph(ar|p|tml)'
