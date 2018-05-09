@@ -9,7 +9,7 @@ DevBox can be configured using the `config.yaml` configuration file.
 
 
 #### VM
-The IP address for the VM can be changed by updating the `ip` property. Also the default name for the VM is 'devbox', this can be changed by adding the `name` property. The default hostname for the VM is also 'devbox', this can be changed by adding the `hostname` property.
+By default, DevBox will create a private network with an automatically assigned IP address. Use `ifconfig` on the VM to determine the IP address. A static IP address for the VM can be given by adding the `ip` property and assigning an address from the [reserved private address space](https://en.wikipedia.org/wiki/Private_network#Private_IPv4_address_spaces). Also the default name for the VM is 'devbox', this can be changed by adding the `name` property. The default hostname for the VM is also 'devbox', this can be changed by adding the `hostname` property.
 ```yaml
 ip: "192.168.22.18"
 name: vmname

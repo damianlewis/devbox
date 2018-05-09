@@ -70,22 +70,19 @@ Vagrant.configure("2") do |config|
     config.vm.box = settings["box"] ||= "damianlewis/ubuntu-#{settings["ubuntu"] ||= default_ubuntu}-#{webserver == "apache" ? "lamp" : "lemp"}"
     config.vm.box_version = settings["version"] ||= ">= 1.0"
 
-    # Configure a private network
-    if settings["ip"] != "autonetwork"
-        config.vm.network :private_network, ip: settings["ip"] ||= "192.168.10.10"
-    else
-        config.vm.network :private_network, :ip => "0.0.0.0", :auto_network => true
-    end
-
-    # Configure additional networks
+    # Configure networks
     if settings.has_key?("networks")
         settings["networks"].each do |network|
-            if network["ip"] != "autonetwork"
-                config.vm.network network["type"], ip: network["ip"], bridge: network["bridge"] ||= nil, netmask: network["netmask"] ||= "255.255.255.0"
+            if network.has_key?("ip")
+                config.vm.network network["type"], ip: network["ip"], bridge: network["bridge"] ||= nil
             else
-                config.vm.network network["type"], :ip => "0.0.0.0", :auto_network => true, bridge: network["bridge"] ||= nil, netmask: network["netmask"] ||= "255.255.255.0"
+                config.vm.network network["type"], bridge: network["bridge"] ||= nil
             end
         end
+    elsif settings.has_key?("ip")
+        config.vm.network :private_network, ip: settings["ip"]
+    else
+        config.vm.network :private_network, type: "dhcp"
     end
 
     # Configure VirtualBox settings
