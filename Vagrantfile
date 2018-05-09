@@ -191,7 +191,7 @@ Vagrant.configure("2") do |config|
     if settings.has_key?("sites")
         settings["sites"].each do |site|
             config.vm.provision "shell" do |s|
-                s.name = "Creating SSL certificate: " + site["url"]
+                s.name = "Creating SSL certificate for [" + site["url"] + "]"
                 s.path = script_dir + "/create-ssl-certificate"
                 s.args = [site["url"]]
             end
@@ -203,7 +203,7 @@ Vagrant.configure("2") do |config|
             end
 
             config.vm.provision "shell" do |s|
-                s.name = "Creating site: " + site["url"]
+                s.name = "Creating site [" + site["url"] + "] with PHP " + site["php"] ||= default_php
                 s.path = script_dir + "/serve-#{webserver}"
                 s.args = [site["url"], site["root"], site["php"] ||= default_php]
             end
@@ -211,7 +211,7 @@ Vagrant.configure("2") do |config|
 
         config.vm.provision "shell" do |s|
             s.name = "Restarting #{webserver.capitalize}"
-            s.inline = "service ${1} restart > /dev/null 2>&1"
+            s.inline = "service $1 restart > /dev/null 2>&1"
             s.args = [webserver == "apache" ? "apache2" : "nginx"]
         end
     end
@@ -233,7 +233,7 @@ Vagrant.configure("2") do |config|
     if settings.has_key?("databases")
         settings["databases"].each do |db|
             config.vm.provision "shell" do |s|
-                s.name = "Creating MySQL database: " + db["name"]
+                s.name = "Creating MySQL database [" + db["name"] + "]"
                 s.path = script_dir + "/create-mysql"
                 s.args = [db["name"], db["user"] ||= "damianlewis", db["password"] ||= "secret"]
             end
@@ -242,6 +242,19 @@ Vagrant.configure("2") do |config|
         config.vm.provision "shell" do |s|
             s.name = "Restarting MySQL"
             s.inline = "service mysql restart > /dev/null 2>&1"
+        end
+    end
+
+    # Set alternative PHP version for CLI
+    if settings.has_key?("php-cli")
+        unless supported_php.include?(settings["php-cli"])
+            abort("PHP version #{settings["php-cli"]} not recognised. Only versions #{supported_php} are currenly supported with DevBox.")
+        end
+
+        config.vm.provision "shell" do |s|
+            s.name = "Setting alternative PHP CLI to PHP #{settings["php-cli"]}"
+            s.path = script_dir + "/set-php-cli"
+            s.args = settings["php-cli"]
         end
     end
 
