@@ -12,7 +12,7 @@ ip: "192.168.10.10"
 #webserver: apache
 
 # PHP version to use for CLI
-#php-cli: "5"
+#php-cli: "5.6"
 
 # MySQL version to use
 #mysql: "5.5"

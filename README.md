@@ -65,6 +65,12 @@ php-modules:
 ```
 **Note**: Modules are installed via Ubuntu's Advanced Packaging Tool (APT)
 
+By default, DevBox uses PHP 7.2. To use a different version for PHP CLI, add the `php-cli` property. Supported versions are `5.6`, `7.0`, `7.1` and `7.2`.
+```yaml
+php-cli: "5.6"
+```
+**Note**: PHP version 5.5 is also supported for legacy systems. Use `5` as the `php-cli` property.
+
 
 #### Website
 You can set up multiple sites by mapping a url to a root folder on the VM. Sites are configured in the `sites` array. The url is set via the `url` property and the root folder set via the `root` property.
@@ -86,7 +92,6 @@ sites:
       root: /path/to/root/folder/on/vm
       php: "7.1"
 ```
-
 **Note**: PHP version 5.5 is also supported for legacy systems. Add `5` to the `php` sites property.
 
 The url must be added to your machines `hosts` file. Example: 
@@ -103,7 +108,6 @@ By default, DevBox uses MySQL 5.7. To install an alternative version, add the `m
 ```yaml
 mysql: "5.5"
 ```
-
 **Note**: These alternative versions are only supported with Ubuntu 14.04.
 
 #### Databases
