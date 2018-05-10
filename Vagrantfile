@@ -117,24 +117,24 @@ Vagrant.configure("2") do |config|
     end
 
     # Update APT packages
-#     config.vm.provision "shell" do |s|
-#         s.name = "Update system packages"
-#         s.inline = "apt-get update > /dev/null 2>&1"
-#     end
+    config.vm.provision "shell" do |s|
+        s.name = "Update system packages"
+        s.inline = "apt-get update > /dev/null 2>&1"
+    end
 
     # Install additional PHP module
     if settings.has_key?("php-modules")
         settings["php-modules"].each do |mod|
             config.vm.provision "shell" do |s|
                 s.name = "Installing PHP module: " + mod
-                s.path = script_dir + "/install-php-module"
+                s.path = "#{script_dir}/install-php-module"
                 s.args = mod
             end
         end
 
         config.vm.provision "shell" do |s|
             s.name = "Restarting PHP-FPM"
-            s.path = script_dir + "/restart-php"
+            s.path = "#{script_dir}/restart-php"
             s.args = supported_php
         end
     end
@@ -143,8 +143,8 @@ Vagrant.configure("2") do |config|
     if settings.has_key?("composer-packages")
         settings["composer-packages"].each do |package|
             config.vm.provision "shell" do |s|
-                s.name = "Installing Composer package: " + package
-                s.path = script_dir + "/install-composer-package"
+                s.name = "Installing Composer package: #{package}"
+                s.path = "#{script_dir}/install-composer-package"
                 s.args = package
                 s.privileged = false
             end
@@ -155,35 +155,35 @@ Vagrant.configure("2") do |config|
     if settings.has_key?("browser-testing") && settings["browser-testing"] == true
         config.vm.provision "shell" do |s|
             s.name = "Installing Java JRE"
-            s.path = script_dir + "/install-java"
+            s.path = "#{script_dir}/install-java"
             s.args = settings["java"] ||= nil
         end
 
         config.vm.provision "shell" do |s|
             s.name = "Installing Selenium Server"
-            s.path = script_dir + "/install-selenium"
+            s.path = "#{script_dir}/install-selenium"
             s.args = settings["selenium"] ||= nil
         end
 
         config.vm.provision "shell" do |s|
             s.name = "Installing Google Chrome"
-            s.path = script_dir + "/install-google-chrome"
+            s.path = "#{script_dir}/install-google-chrome"
         end
 
         config.vm.provision "shell" do |s|
             s.name = "Installing ChromeDriver"
-            s.path = script_dir + "/install-chromedriver"
+            s.path = "#{script_dir}/install-chromedriver"
             s.args = settings["chromedriver"] ||= nil
         end
 
         config.vm.provision "shell" do |s|
             s.name = "Installing Xvfb"
-            s.path = script_dir + "/install-xvfb"
+            s.path = "#{script_dir}/install-xvfb"
         end
 
         config.vm.provision "shell" do |s|
             s.name = "Adding Selenium Server bash commands"
-            s.path = script_dir + "/add-selenium-commands"
+            s.path = "#{script_dir}/add-selenium-commands"
         end
     end
 
@@ -191,8 +191,8 @@ Vagrant.configure("2") do |config|
     if settings.has_key?("sites")
         settings["sites"].each do |site|
             config.vm.provision "shell" do |s|
-                s.name = "Creating SSL certificate for [" + site["url"] + "]"
-                s.path = script_dir + "/create-ssl-certificate"
+                s.name = "Creating SSL certificate for [#{site["url"]}]"
+                s.path = "#{script_dir}/create-ssl-certificate"
                 s.args = [site["url"]]
             end
 
@@ -203,8 +203,8 @@ Vagrant.configure("2") do |config|
             end
 
             config.vm.provision "shell" do |s|
-                s.name = "Creating site [" + site["url"] + "] with PHP " + site["php"] ||= default_php
-                s.path = script_dir + "/serve-#{webserver}"
+                s.name = "Creating site [#{site["url"]}] with PHP #{site["php"] ||= default_php}"
+                s.path = "#{script_dir}/serve-#{webserver}"
                 s.args = [site["url"], site["root"], site["php"] ||= default_php]
             end
         end
@@ -224,7 +224,7 @@ Vagrant.configure("2") do |config|
 
         config.vm.provision "shell" do |s|
             s.name = "Installing MySQL #{settings["mysql"]}"
-            s.path = script_dir + "/install-mysql"
+            s.path = "#{script_dir}/install-mysql"
             s.args = settings["mysql"]
         end
     end
@@ -233,8 +233,8 @@ Vagrant.configure("2") do |config|
     if settings.has_key?("databases")
         settings["databases"].each do |db|
             config.vm.provision "shell" do |s|
-                s.name = "Creating MySQL database [" + db["name"] + "]"
-                s.path = script_dir + "/create-mysql"
+                s.name = "Creating MySQL database [#{db["name"]}]"
+                s.path = "#{script_dir}/create-mysql"
                 s.args = [db["name"], db["user"] ||= "damianlewis", db["password"] ||= "secret"]
             end
         end
@@ -253,7 +253,7 @@ Vagrant.configure("2") do |config|
 
         config.vm.provision "shell" do |s|
             s.name = "Setting alternative PHP CLI to PHP #{settings["php-cli"]}"
-            s.path = script_dir + "/set-php-cli"
+            s.path = "#{script_dir}/set-php-cli"
             s.args = settings["php-cli"]
         end
     end
