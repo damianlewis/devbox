@@ -126,7 +126,7 @@ Vagrant.configure("2") do |config|
     if settings.has_key?("php-modules")
         settings["php-modules"].each do |mod|
             config.vm.provision "shell" do |s|
-                s.name = "Installing PHP module: " + mod
+                s.name = "Installing PHP module [#{mod}]"
                 s.path = "#{script_dir}/install-php-module"
                 s.args = mod
             end
@@ -143,7 +143,7 @@ Vagrant.configure("2") do |config|
     if settings.has_key?("composer-packages")
         settings["composer-packages"].each do |package|
             config.vm.provision "shell" do |s|
-                s.name = "Installing Composer package: #{package}"
+                s.name = "Installing Composer package [#{package}]"
                 s.path = "#{script_dir}/install-composer-package"
                 s.args = package
                 s.privileged = false
@@ -184,6 +184,14 @@ Vagrant.configure("2") do |config|
         config.vm.provision "shell" do |s|
             s.name = "Adding Selenium Server bash commands"
             s.path = "#{script_dir}/add-selenium-commands"
+        end
+    end
+
+    # Fix for issue with Nginx 1.13.12 not starting on damianlewis/ubuntu-16.04-lemp box
+    if config.vm.box == "damianlewis/ubuntu-16.04-lemp"
+        config.vm.provision "shell", run: "always" do |s|
+            s.name = "Starting Nginx"
+            s.inline = "service nginx restart > /dev/null 2>&1"
         end
     end
 
