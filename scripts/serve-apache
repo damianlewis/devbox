@@ -14,7 +14,7 @@ fi
 
 if [[ "$ubuntu_major" > '14' && "$php" < '5.6' ]]
 then
-    echo "PHP $php not supported on $ubuntu"
+    echo "PHP $php not supported on Ubuntu $ubuntu"
     exit 1
 fi
 

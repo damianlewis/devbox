@@ -16,7 +16,7 @@ fi
 
 if [[ "$ubuntu_major" > '14' && "$version" < '5.7' ]]
 then
-    echo "MySQL $version not supported on $ubuntu"
+    echo "MySQL $version not supported on Ubuntu $ubuntu"
     exit 1
 fi
 
