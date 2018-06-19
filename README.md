@@ -118,7 +118,7 @@ databases:
     - name: dbname2
 ```
 
-The default user created for a database is `damianlewis` with the password `secret`. To change the username and password for a database add the `user` and `password` properties.
+The default user created for a database is `root` with the password `secret`. To change the username and password for a database add the `user` and `password` properties.
 ```yaml
 databases:
     - name: dbname1
