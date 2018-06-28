@@ -118,7 +118,7 @@ databases:
     - name: dbname2
 ```
 
-The default user created for a database is `damianlewis` with the password `secret`. To change the username and password for a database add the `user` and `password` properties.
+As well as the default MySQL root user, a specific user is created for each database. The default username for this specific user is `damianlewis` with the password `secret`. To change this, add the `user` and `password` properties to the database array.
 ```yaml
 databases:
     - name: dbname1
