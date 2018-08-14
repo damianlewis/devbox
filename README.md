@@ -16,7 +16,7 @@ hostname: vmhostname
 ```
 
 
-#### Network
+#### Networks
 By default, DevBox will create a private network with an automatically assigned IP address. Use `ifconfig` on the VM to determine the IP address. To create a bridged (public) network, add a `networks` array with a `type` property of `bridged`.
 ```yaml
 networks:
