@@ -41,7 +41,6 @@ name = settings["name"] ||= "devbox"
 # Default ports for forwarding
 default_ports = {
     80 => 8000,
-    443 => 44300,
     3306 => 33060
 }
 
@@ -70,19 +69,41 @@ Vagrant.configure("2") do |config|
     config.vm.box = settings["box"] ||= "damianlewis/ubuntu-#{settings["ubuntu"] ||= default_ubuntu}-#{webserver == "apache" ? "lamp" : "lemp"}"
     config.vm.box_version = settings["version"] ||= ">= 1.0"
 
+    # Configure default ports
+    default_ports.each do |guest, host|
+        config.vm.network "forwarded_port", guest: guest, host: host, auto_correct: true
+    end
+
+    # Configure additional ports to forward
+    if settings.has_key?("ports")
+        settings["ports"].each do |port|
+            config.vm.network "forwarded_port", guest: port["guest"], host: port["host"], auto_correct: true
+        end
+    end
+
     # Configure networks
     if settings.has_key?("networks")
         settings["networks"].each do |network|
-            if network.has_key?("ip")
-                config.vm.network network["type"], ip: network["ip"], bridge: network["bridge"] ||= nil
-            else
-                config.vm.network network["type"], bridge: network["bridge"] ||= nil
+            if network.has_key?("type")
+                if network["type"] == "private"
+                    if network.has_key?("ip")
+                        config.vm.network "private_network", ip: network["ip"]
+                    else
+                        config.vm.network "private_network", type: "dhcp"
+                    end
+                end
+
+                if network["type"] == "bridged"
+                    if network.has_key?("ip")
+                        config.vm.network "public_network", ip: network["ip"], bridge: network["bridge"] ||= nil
+                    else
+                        config.vm.network "public_network", bridge: network["bridge"] ||= nil
+                    end
+                end
             end
         end
-    elsif settings.has_key?("ip")
-        config.vm.network :private_network, ip: settings["ip"]
     else
-        config.vm.network :private_network, type: "dhcp"
+        config.vm.network "private_network", type: "dhcp"
     end
 
     # Configure VirtualBox settings
@@ -96,11 +117,6 @@ Vagrant.configure("2") do |config|
         if settings.has_key?("gui") && settings["gui"] == true
             vb.gui = true
         end
-    end
-
-    # Configure default ports
-    default_ports.each do |guest, host|
-        config.vm.network "forwarded_port", guest: guest, host: host, auto_correct: true
     end
 
     # Configure shared folders

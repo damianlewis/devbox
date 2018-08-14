@@ -1,7 +1,16 @@
 ---
 # VM configurations
-ip: "192.168.10.10"
 #ubuntu: "14.04"
+
+# Networks to configure
+#networks:
+#    - type: bridged
+#      ip: "192.168.178.40"
+
+# Additional ports to forward
+#ports:
+#    - guest: 443
+#      host: 44300
 
 # Shared folders to configure
 #folders:

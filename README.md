@@ -9,11 +9,38 @@ DevBox can be configured using the `config.yaml` configuration file.
 
 
 #### VM
-By default, DevBox will create a private network with an automatically assigned IP address. Use `ifconfig` on the VM to determine the IP address. A static IP address for the VM can be given by adding the `ip` property and assigning an address from the [reserved private address space](https://en.wikipedia.org/wiki/Private_network#Private_IPv4_address_spaces). Also the default name for the VM is 'devbox', this can be changed by adding the `name` property. The default hostname for the VM is also 'devbox', this can be changed by adding the `hostname` property.
+By default, the name for the VM is 'devbox', this can be changed by adding the `name` property. The default hostname for the VM is also 'devbox', this can be changed by adding the `hostname` property.
 ```yaml
-ip: "192.168.22.18"
 name: vmname
 hostname: vmhostname
+```
+
+
+#### Network
+By default, DevBox will create a private network with an automatically assigned IP address. Use `ifconfig` on the VM to determine the IP address. To create a bridged (public) network, add a `networks` array with a `type` property of `bridged`.
+```yaml
+networks:
+    - type: bridged
+```
+
+A static IP address for the VM can also be given by adding an `ip` property and assigning an address from the [reserved private address space](https://en.wikipedia.org/wiki/Private_network#Private_IPv4_address_spaces).
+```yaml
+networks:
+    - type: private
+      ip: "192.168.178.40"
+```
+
+```yaml
+networks:
+    - type: bridged
+      ip: "192.168.178.40"
+```
+
+By default, DevBox will forward ports 80 and 3306 on the guest machine to ports 8000 and 33060 on the host. To forward additional ports, add a `ports` array with `guest` and `host` properties set to the ports you want to forward.
+```yaml
+ports:
+    - guest: 443
+      host: 44300
 ```
 
 
