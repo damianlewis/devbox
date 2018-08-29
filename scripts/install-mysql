@@ -39,7 +39,6 @@ then
     # Add MySQL APT repository
     apt-key adv --keyserver ha.pool.sks-keyservers.net --recv-keys 5072E1F5 > /dev/null 2>&1
     echo "deb http://repo.mysql.com/apt/ubuntu/ $(lsb_release -c | awk '{print $2}') mysql-$version" >> /etc/apt/sources.list.d/mysql.list
-    apt-get update > /dev/null 2>&1
 fi
 
 # Install MySQL
@@ -47,6 +46,7 @@ debconf-set-selections <<< "mysql-server mysql-server/root_password password $ro
 debconf-set-selections <<< "mysql-server mysql-server/root_password_again password $root_password"
 debconf-set-selections <<< "mysql-community-server mysql-community-server/root-pass password $root_password"
 debconf-set-selections <<< "mysql-community-server mysql-community-server/re-root-pass password $root_password"
+apt-get update > /dev/null 2>&1
 apt-get -y install mysql-server > /dev/null 2>&1
 
 # PHP MySQL module may have been removed. Reinstall it if it's not present
