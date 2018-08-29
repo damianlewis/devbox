@@ -10,12 +10,12 @@ then
 fi
 
 # Check if package exists
+apt-get update > /dev/null 2>&1
 apt-cache show "$1" > /dev/null 2>&1
 
 if [[ $? != 0 ]]
 then
     echo "Unable to locate the $1 package in APT"
 else
-    apt-get update > /dev/null 2>&1
     apt-get -y install "$1" > /dev/null 2>&1
 fi

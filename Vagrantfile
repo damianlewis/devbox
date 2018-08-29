@@ -132,12 +132,6 @@ Vagrant.configure("2") do |config|
         config.vm.synced_folder ".", "/vagrant"
     end
 
-#     # Update APT repositories
-#     config.vm.provision "shell" do |s|
-#         s.name = "Update APT repositories"
-#         s.inline = "apt-get update > /dev/null 2>&1"
-#     end
-
     # Install additional Ubuntu packages
     if settings.has_key?("apt-packages")
         settings["apt-packages"].each do |package|
