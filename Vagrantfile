@@ -132,19 +132,19 @@ Vagrant.configure("2") do |config|
         config.vm.synced_folder ".", "/vagrant"
     end
 
-    # Update APT packages
-    config.vm.provision "shell" do |s|
-        s.name = "Update system packages"
-        s.inline = "apt-get update > /dev/null 2>&1"
-    end
+#     # Update APT repositories
+#     config.vm.provision "shell" do |s|
+#         s.name = "Update APT repositories"
+#         s.inline = "apt-get update > /dev/null 2>&1"
+#     end
 
-    # Install additional PHP module
-    if settings.has_key?("php-modules")
-        settings["php-modules"].each do |mod|
+    # Install additional Ubuntu packages
+    if settings.has_key?("apt-packages")
+        settings["apt-packages"].each do |package|
             config.vm.provision "shell" do |s|
-                s.name = "Installing PHP module [#{mod}]"
-                s.path = "#{script_dir}/install-php-module"
-                s.args = mod
+                s.name = "Installing APT package [#{package}]"
+                s.path = "#{script_dir}/install-apt-package"
+                s.args = package
             end
         end
 

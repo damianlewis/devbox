@@ -26,8 +26,8 @@
 # MySQL version to use
 #mysql: "5.5"
 
-# Additional PHP modules to install
-#php-modules:
+# Additional Ubuntu packages to install
+#apt-packages:
 #    - php7.0-gd
 #    - php7.1-mbstring
 #    - php7.2-xml

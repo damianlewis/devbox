@@ -2,14 +2,14 @@
 
 export DEBIAN_FRONTEND=noninteractive
 
-# Check if module is already installed
+# Check if package is already installed
 if (dpkg --list | awk '{print $2}' | grep -Fcq "$1")
 then
     echo "$1 already installed"
     exit 0
 fi
 
-# Check if APT includes the module
+# Check if package exists
 apt-cache show "$1" > /dev/null 2>&1
 
 if [[ $? != 0 ]]

@@ -83,20 +83,22 @@ The VM includes the following PHP modules:
 - mysql
 - xdebug
 
-If you require additional PHP modules then they can be added to the `php-modules` array as follows:
-```yaml
-php-modules:
-    - php7.0-gd
-    - php7.1-mbstring
-    - php7.2-xml
-```
-**Note**: Modules are installed via Ubuntu's Advanced Packaging Tool (APT)
-
 By default, DevBox uses PHP 7.2. To use a different version for PHP CLI, add the `php-cli` property. Supported versions are `5.6`, `7.0`, `7.1` and `7.2`.
 ```yaml
 php-cli: "5.6"
 ```
 **Note**: PHP version 5.5 is also supported for legacy systems. Use `5` as the `php-cli` property.
+
+
+#### Additional Packages
+If you require additional PHP modules or any other Ubuntu packages then they can be added to the `apt-packages` array as follows:
+```yaml
+apt-packages:
+    - php7.0-gd
+    - php7.1-mbstring
+    - php7.2-xml
+```
+**Note**: Additional packages are installed via Ubuntu's Advanced Packaging Tool (APT)
 
 
 #### Website
