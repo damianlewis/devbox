@@ -65,3 +65,5 @@ block="<VirtualHost *:80>
 echo "$block" > "/etc/apache2/sites-available/$hostname.conf"
 
 a2ensite "$hostname.conf" > /dev/null 2>&1
+
+a2enconf "php$php-fpm" && service apache2 restart
