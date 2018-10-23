@@ -42,10 +42,19 @@ then
 fi
 
 # Install MySQL
-debconf-set-selections <<< "mysql-server mysql-server/root_password password $root_password"
-debconf-set-selections <<< "mysql-server mysql-server/root_password_again password $root_password"
-debconf-set-selections <<< "mysql-community-server mysql-community-server/root-pass password $root_password"
-debconf-set-selections <<< "mysql-community-server mysql-community-server/re-root-pass password $root_password"
+if [[ "$version" > '5.5' ]]
+then
+    debconf-set-selections <<< "mysql-community-server mysql-community-server/root-pass password $root_password"
+    debconf-set-selections <<< "mysql-community-server mysql-community-server/re-root-pass password $root_password"
+    config_path='/etc/mysql/mysql.conf.d'
+    config_file="$config_path/mysqld.cnf"
+else
+    debconf-set-selections <<< "mysql-server mysql-server/root_password password $root_password"
+    debconf-set-selections <<< "mysql-server mysql-server/root_password_again password $root_password"
+    config_path='/etc/mysql'
+    config_file="$config_path/my.cnf"
+fi
+
 apt-get update > /dev/null 2>&1
 apt-get -y install mysql-server > /dev/null 2>&1
 
@@ -60,8 +69,27 @@ do
 done
 
 # Configure MySQL for remote access
-sed -i '/^bind-address/s/bind-address.*=.*/bind-address = 0.0.0.0/' /etc/mysql/my.cnf
-mysql --user="$root_user" --password="$root_password" --database='mysql' -e "UPDATE user SET plugin='mysql_native_password' WHERE User='$root_user';" 2> /dev/null
-mysql --user="$root_user" --password="$root_password" -e "GRANT ALL ON *.* TO root@'0.0.0.0' IDENTIFIED BY '$root_password' WITH GRANT OPTION;" 2> /dev/null
-mysql --user="$root_user" --password="$root_password" -e 'FLUSH PRIVILEGES;' 2> /dev/null
+bind_address='0.0.0.0'
+
+if grep -q '^bind-address' "$config_file"
+then
+    sed -i "s/^bind-address.*=.*/bind-address = $bind_address/" "$config_file"
+else
+    cat <<EOF > /etc/mysql/mysql.conf.d/devbox.cnf
+# Configure MySQL for remote access
+[mysqld]
+bind-address = $bind_address
+EOF
+fi
+
+# Configure MySQL for remote access
+# mysql --user="$root_user" --password="$root_password" --database='mysql' -e "UPDATE user SET plugin='mysql_native_password' WHERE User='$root_user';" 2> /dev/null
+# mysql --user="$root_user" --password="$root_password" -e "GRANT ALL ON *.* TO root@'0.0.0.0' IDENTIFIED BY '$root_password' WITH GRANT OPTION;" 2> /dev/null
+# mysql --user="$root_user" --password="$root_password" -e 'FLUSH PRIVILEGES;' 2> /dev/null
+
+# Adding grant privileges to MySQL root user from everywhere
+mysql --user="$root_user" --password="$root_password" -e "CREATE USER '$root_user'@'$bind_address' IDENTIFIED BY '$root_password';" 2> /dev/null
+mysql --user="$root_user" --password="$root_password" -e "GRANT ALL PRIVILEGES ON *.* TO '$root_user'@'$bind_address' WITH GRANT OPTION;" 2> /dev/null
+mysql --user="$root_user" --password="$root_password" -e "FLUSH PRIVILEGES;" 2> /dev/null
+
 service mysql restart > /dev/null 2>&1
