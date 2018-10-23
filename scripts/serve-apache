@@ -64,6 +64,10 @@ block="<VirtualHost *:80>
 
 echo "$block" > "/etc/apache2/sites-available/$hostname.conf"
 
+a2enmod proxy proxy_fcgi ssl > /dev/null 2>&1
+
+a2dissite 000-default > /dev/null 2>&1
 a2ensite "$hostname.conf" > /dev/null 2>&1
 
-a2enconf "php$php-fpm" && service apache2 restart
+a2enconf "php$php-fpm" > /dev/null 2>&1
+service apache2 restart > /dev/null 2>&1

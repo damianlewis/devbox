@@ -54,4 +54,9 @@ block="server {
 
 echo "$block" > "/etc/nginx/sites-available/$hostname"
 
+if [[ -f /etc/nginx/sites-enabled/default ]]
+then
+    rm /etc/nginx/sites-enabled/default
+fi
+
 ln -fs "/etc/nginx/sites-available/$hostname" "/etc/nginx/sites-enabled/$hostname"

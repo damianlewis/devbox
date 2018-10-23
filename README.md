@@ -62,14 +62,14 @@ folders:
 
 
 #### Ubuntu
-By default, DevBox uses Ubuntu 16.04. To use a different version, add the `ubuntu` property. Supported versions are `14.04` and `16.04`. 
+By default, DevBox uses Ubuntu 16.04. To use a different version, add the `ubuntu` property. Supported versions are `14.04` and `16.04`.
 ```yaml
 ubuntu: "14.04"
 ```
 
 
 #### Webserver
-By default, DevBox uses Nginx as the web server. To use a different web server, add the `webserver` property. Supported servers are `nginx` and `apache`. 
+By default, DevBox uses Nginx as the web server. To use a different web server, add the `webserver` property. Supported servers are `nginx` and `apache`.
 ```yaml
 webserver: apache
 ```
@@ -123,17 +123,17 @@ sites:
 ```
 **Note**: PHP version 5.5 is also supported for legacy systems. Add `5` to the `php` sites property.
 
-The url must be added to your machines `hosts` file. Example: 
+The url must be added to your machines `hosts` file. Example:
 ```
 192.168.22.18   site1.test
 192.168.22.18   site2.test
 ```
 
-A self-signed SSL certificate is created for each site, so sites can be accessed via HTTP and HTTPS. 
+A self-signed SSL certificate is created for each site, so sites can be accessed via HTTP and HTTPS.
 
 
 #### MySQL
-By default, DevBox uses MySQL 5.7. To install an alternative version, add the `mysql` property. Supported versions are `5.5`, `5.6` and `5.7`. 
+By default, DevBox uses MySQL 5.7. To install an alternative version, add the `mysql` property. Supported versions are `5.5`, `5.6` and `5.7`.
 ```yaml
 mysql: "5.5"
 ```
@@ -177,8 +177,5 @@ A number of default bash aliases are created for the VM. These can be found in t
 
 ### Other software included
 - Git
-- NVM and Node with the following global packages:
-    - Bower
-    - Grunt
-    - Gulp
+- NVM and Node
 - Yarn
